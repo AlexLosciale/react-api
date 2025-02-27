@@ -3,6 +3,15 @@ import { useEffect, useState } from "react";
 function App() {
   const [data, setData] = useState([]);
 
+  const handleDelete = (id) => {
+    fetch(`http://localhost:3000/blog/${id}`, {
+      method: "DELETE",
+    })
+      .then(() => {
+        setData(data.filter((post) => post.id !== id));
+      })
+  }
+
   useEffect(() => {
     fetch("http://localhost:3000/blog")
       .then((res) => res.json())
@@ -13,12 +22,13 @@ function App() {
   return (
     <>
       <h1>Lista dei Post</h1>
-      <table>
+      <table border={1}>
         <thead>
           <tr>
             <th>ID</th>
             <th>Title</th>
             <th>Content</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -27,6 +37,9 @@ function App() {
               <td>{post.id}</td>
               <td>{post.title}</td>
               <td>{post.content}</td>
+              <td>
+                <button onClick={() => handleDelete(post.id)}>X</button>
+              </td>
             </tr>
           ))}
         </tbody>
